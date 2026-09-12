@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <div class="container section">
+    <div id="dashLoading" class="state-block">
+      <div class="spinner"></div>
+      <p>Loading your dashboard…</p>
+    </div>
+
+    <div id="dashContent" hidden>
+      <h1 class="dash-title">Dashboard</h1>
+      <p class="muted mb-2">Manage your listings and track swap requests, all in one place.</p>
+
+      <div class="dash-toprow">
+        <div class="card stat-card"><b id="statMySkills">0</b><span>Your listings</span></div>
+        <div class="card stat-card"><b id="statPending">0</b><span>Pending requests</span></div>
+        <div class="card stat-card"><b id="statAccepted">0</b><span>Accepted swaps</span></div>
+        <div class="card stat-card"><b id="statCompleted">0</b><span>Completed swaps</span></div>
+      </div>
+
+      <div class="dash-layout">
+        <nav class="dash-side" aria-label="Dashboard sections">
+          <a href="#overview" data-panel="overview" class="is-active">Overview</a>
+          <a href="#my-skills" data-panel="my-skills">My Skills</a>
+          <a href="#requests-received" data-panel="requests-received">Requests Received</a>
+          <a href="#requests-sent" data-panel="requests-sent">Requests Sent</a>
+        </nav>
+
+        <div>
+          <!-- Overview -->
+          <section class="dash-panel is-active" id="panel-overview">
+            <div class="card">
+              <h3 class="mt-0">Recent activity</h3>
+              <div id="recentActivity"></div>
+            </div>
+          </section>
+
+          <!-- My Skills -->
+          <section class="dash-panel" id="panel-my-skills">
+            <div class="flex-between mb-2">
+              <h3 class="mt-0">My skill listings</h3>
+              <button class="btn btn-primary btn-sm" id="addSkillBtn">+ Add skill</button>
+            </div>
+            <div id="mySkillsGrid" class="ticket-grid"></div>
+          </section>
+
+          <!-- Requests received -->
+          <section class="dash-panel" id="panel-requests-received">
+            <h3 class="mt-0">Requests for your skills</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Skill</th><th>From</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="receivedTableBody"></tbody>
+              </table>
+            </div>
+            <div id="receivedEmpty" class="state-block" hidden>
+              <div class="state-block__icon">📭</div><p>No one has requested your skills yet.</p>
+            </div>
+          </section>
+
+          <!-- Requests sent -->
+          <section class="dash-panel" id="panel-requests-sent">
+            <h3 class="mt-0">Your swap requests</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Skill</th><th>Owner</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="sentTableBody"></tbody>
+              </table>
+            </div>
+            <div id="sentEmpty" class="state-block" hidden>
+              <div class="state-block__icon">📨</div><p>You haven't requested any swaps yet.</p>
+              <a href="browse.html" class="btn btn-primary btn-sm mt-1">Browse skills</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<!-- Add/Edit skill modal -->
+<div class="modal-overlay" id="skillModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="skillModalTitle">
+    <div class="modal__head">
+      <h3 id="skillModalTitle" class="mt-0">Add a skill</h3>
+      <button class="modal__close" data-modal-close aria-label="Close dialog">×</button>
+    </div>
+    <form id="skillForm" novalidate>
+      <input type="hidden" id="skillId">
+      <div class="field">
+        <label for="skTitle">Title</label>
+        <input type="text" id="skTitle" required>
+        <span class="error-text">Please enter a title.</span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="skCategory">Category</label>
+          <select id="skCategory" required></select>
+        </div>
+        <div class="field">
+          <label for="skLevel">Level</label>
+          <select id="skLevel" required>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="skDescription">Description</label>
+        <textarea id="skDescription" required></textarea>
+        <span class="error-text">Please add a short description (min 20 characters).</span>
+      </div>
+      <div class="field">
+        <label for="skWant">What you'd like in return</label>
+        <input type="text" id="skWant" placeholder="e.g. Guitar lessons or Spanish practice">
+      </div>
+      <div class="field">
+        <label for="skTags">Tags (comma separated)</label>
+        <input type="text" id="skTags" placeholder="figma, ux, prototyping">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="skillSubmitBtn">Save skill</button>
+    </form>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal__head">
+      <h3 id="deleteModalTitle" class="mt-0">Remove this listing?</h3>
+      <button class="modal__close" data-modal-close aria-label="Close dialog">×</button>
+    </div>
+    <p class="muted">This can't be undone. The listing will be removed from the board immediately.</p>
+    <div class="flex gap-sm mt-2">
+      <button class="btn btn-outline btn-block" data-modal-close>Cancel</button>
+      <button class="btn btn-danger btn-block" id="confirmDeleteBtn">Remove listing</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

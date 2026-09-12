@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero-section {
+    background: var(--teal-deep);
+    color: #fff;
+  }
+  .hero-section .eyebrow {
+    color: #f0c069;
+  }
+  .hero-section h1 {
+    color: #fff;
+    font-size: var(--step3);
+  }
+  .hero-section .lede {
+    color: #cfe0d9;
+    max-width: 60ch;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <section class="section-tight hero-section">
+    <div class="container">
+      <span class="eyebrow">Our story</span>
+      <h1>Skills are currency too.</h1>
+      <p class="lede">SkillSwap started as a corkboard in a co-working space — a place to pin an index card offering guitar lessons for web design help. We just built it a website.</p>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="detail-grid">
+      <div>
+        <h2>Why we built this</h2>
+        <p>Not everyone has spare cash for lessons, but almost everyone has something worth teaching. SkillSwap makes that trade visible: post what you know, find what you want to learn, and swap directly with another person — no fees, no middlemen.</p>
+        <p>We believe the best learning happens person-to-person, with real accountability on both sides. That's why every swap ends with a review, and why your reputation on the board is worth more than any subscription plan.</p>
+        <h2 class="mt-2">What we stand for</h2>
+        <div class="steps">
+          <div class="step"><h4>Fair exchange</h4><p class="muted">Every trade should feel like an even swap — time and skill for time and skill.</p></div>
+          <div class="step"><h4>Real accountability</h4><p class="muted">Reviews and a visible history keep the community trustworthy.</p></div>
+          <div class="step"><h4>Open to everyone</h4><p class="muted">Whatever you know is worth teaching, and worth trading for something new.</p></div>
+        </div>
+      </div>
+      <aside>
+        <div class="card mb-2">
+          <h3 class="mt-0">SkillSwap by the numbers</h3>
+          <div class="card-grid stats-grid">
+            <div class="stat-card"><b id="aboutSkills">—</b><span>Listings</span></div>
+            <div class="stat-card"><b id="aboutUsers">—</b><span>Members</span></div>
+            <div class="stat-card"><b id="aboutSwaps">—</b><span>Swaps</span></div>
+            <div class="stat-card"><b id="aboutCats">—</b><span>Categories</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="mt-0">Have a skill to share?</h3>
+          <p class="muted">Join the board and list it in minutes.</p>
+          <a href="signup.html" class="btn btn-primary btn-block">Sign up free</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const [skills, users, requests, categories] = await Promise.all([
+      SSData.Skills.list(), SSData.Users.list(), SSData.Requests.list(), SSData.Categories.list(),
+    ]);
+    document.getElementById("aboutSkills").textContent = skills.length;
+    document.getElementById("aboutUsers").textContent = users.length;
+    document.getElementById("aboutSwaps").textContent = requests.filter(r => r.status === "completed").length;
+    document.getElementById("aboutCats").textContent = categories.length;
+  } catch (err) {
+    ["aboutSkills", "aboutUsers", "aboutSwaps", "aboutCats"].forEach(id => document.getElementById(id).textContent = "—");
+  }
+});
+</script>
+</body>
+</html>

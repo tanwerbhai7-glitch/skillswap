@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Skills — SkillSwap</title>
+<meta name="description" content="Search and filter skills available to trade on SkillSwap.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <section class="section-tight browse-hero">
+    <div class="container">
+      <span class="eyebrow browse-hero__eyebrow">The board</span>
+      <h1 class="browse-hero__title">Browse skills</h1>
+      <p class="lede browse-hero__lede">Search the full listing board or filter by category, level and rating.</p>
+    </div>
+  </section>
+
+  <section class="section container">
+    <form class="toolbar" id="filterForm" role="search" aria-label="Skill search and filters">
+      <div class="field-search">
+        <label for="searchInput" class="visually-hidden">Search skills</label>
+        <input type="search" id="searchInput" placeholder="Search skills, tags or teachers…" autocomplete="off">
+      </div>
+      <div>
+        <label for="sortSelect" class="visually-hidden">Sort by</label>
+        <select id="sortSelect">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="rating">Highest rated</option>
+          <option value="az">A – Z</option>
+        </select>
+      </div>
+      <div>
+        <label for="levelSelect" class="visually-hidden">Level</label>
+        <select id="levelSelect">
+          <option value="All">All levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm" id="clearFilters">Clear filters</button>
+    </form>
+
+    <div class="chip-group mb-2" id="categoryChips" aria-label="Filter by category"></div>
+
+    <div class="flex-between mb-2">
+      <p class="muted" id="resultCount" aria-live="polite">Loading…</p>
+    </div>
+
+    <div id="skillsGrid" class="ticket-grid"></div>
+    <div id="emptyState" class="state-block" hidden>
+      <div class="state-block__icon">🔍</div>
+      <h3>No matching skills</h3>
+      <p>Try a different search term or clear your filters.</p>
+      <button type="button" class="btn btn-outline btn-sm" id="emptyClearBtn">Clear filters</button>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/browse.js"></script>
+</body>
+</html>

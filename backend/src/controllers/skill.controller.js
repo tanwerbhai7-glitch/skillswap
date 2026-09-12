@@ -1,0 +1,7 @@
+const Skill=require("../models/Skill");const User=require("../models/User");const asyncHandler=require("../utils/asyncHandler");const ApiError=require("../utils/ApiError");const{sendSuccess}=require("../utils/ApiResponse");
+const listSkills=asyncHandler(async(req,res)=>{const data=await Skill.list(req.query);sendSuccess(res,{message:"Skills fetched",data,meta:{count:data.length}})});
+const getSkill=asyncHandler(async(req,res)=>{const skill=await Skill.findById(req.params.id);if(!skill||!skill.isActive)throw ApiError.notFound("Skill not found");sendSuccess(res,{message:"Skill fetched",data:skill})});
+const createSkill=asyncHandler(async(req,res)=>{const owner=await User.findById(req.body.ownerId);if(!owner)throw ApiError.notFound("Owner not found");const skill=await Skill.create({...req.body,ownerName:req.body.ownerName||owner.name});sendSuccess(res,{statusCode:201,message:"Skill listed",data:skill})});
+const updateSkill=asyncHandler(async(req,res)=>{const patch={};for(const k of ["title","description","category","level","tags","wantInReturn","image","isActive"])if(req.body[k]!==undefined)patch[k]=req.body[k];const skill=await Skill.update(req.params.id,patch);if(!skill)throw ApiError.notFound("Skill not found");sendSuccess(res,{message:"Skill updated",data:skill})});
+const deleteSkill=asyncHandler(async(req,res)=>{const skill=await Skill.delete(req.params.id);if(!skill)throw ApiError.notFound("Skill not found");sendSuccess(res,{message:"Skill removed",data:{id:skill.id}})});
+module.exports={listSkills,getSkill,createSkill,updateSkill,deleteSkill};

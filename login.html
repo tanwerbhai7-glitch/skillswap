@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .auth-copy {
+    color: #cfe0d9;
+  }
+
+  .demo-account-note {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #b9cec6;
+  }
+
+  .demo-account-note strong {
+    color: #f4f1e8;
+  }
+
+  .login-title {
+    font-size: var(--step2);
+  }
+
+  .login-meta-row {
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <div class="auth-wrap">
+    <div class="auth-side">
+      <span class="eyebrow eyebrow-gold">Welcome back</span>
+      <h2>Pick up right where you left off.</h2>
+      <p class="auth-copy">Check your swap requests, message teachers, and keep trading skills across the board.</p>
+      <div class="mt-2 demo-account-note">
+        Demo account — try it instantly:<br>
+        <strong>ava@example.com</strong> / <strong>Password1</strong>
+      </div>
+    </div>
+    <div class="auth-main">
+      <div class="auth-card">
+        <h1 class="login-title">Log in to SkillSwap</h1>
+        <p class="muted mb-2">New here? <a href="signup.html">Create an account</a></p>
+
+        <form class="form-card" id="loginForm" novalidate>
+          <div class="field">
+            <label for="loginEmail">Email address</label>
+            <input type="email" id="loginEmail" autocomplete="email" required>
+            <span class="error-text">Enter a valid email address.</span>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password" required>
+            <span class="error-text">Password is required.</span>
+          </div>
+          <div class="flex-between mb-2 login-meta-row">
+            <label class="checkbox-row"><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" id="fillDemoBtn">Use demo account</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">Log in</button>
+          <p class="form-foot">By continuing you agree to SkillSwap's demo Terms &amp; Privacy Policy.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <div class="auth-wrap">
+    <div class="auth-side">
+      <span class="eyebrow">Join the board</span>
+      <h2>List a skill. Learn one back.</h2>
+      <p class="auth-side-description">Create a free account to post listings, send swap requests, and track trades from your dashboard.</p>
+      <ul class="auth-side-list">
+        <li>No fees — every trade is skill-for-skill</li>
+        <li>Reviews keep the community honest</li>
+        <li>You control what you offer and request</li>
+      </ul>
+    </div>
+    <div class="auth-main">
+      <div class="auth-card">
+        <h1 class="heading-step2">Create your account</h1>
+        <p class="muted mb-2">Already on SkillSwap? <a href="login.html">Log in</a></p>
+
+        <form class="form-card" id="signupForm" novalidate>
+          <div class="field">
+            <label for="suName">Full name</label>
+            <input type="text" id="suName" autocomplete="name" required>
+            <span class="error-text">Please enter your name.</span>
+          </div>
+          <div class="field">
+            <label for="suEmail">Email address</label>
+            <input type="email" id="suEmail" autocomplete="email" required>
+            <span class="error-text">Enter a valid email address.</span>
+          </div>
+          <div class="field">
+            <label for="suPassword">Password</label>
+            <input type="password" id="suPassword" autocomplete="new-password" required>
+            <div class="strength-meter"><span id="strengthBar"></span></div>
+            <span class="hint" id="strengthHint">Use at least 8 characters, with a letter and a number.</span>
+            <span class="error-text">Password needs at least 8 characters, with a letter and a number.</span>
+          </div>
+          <div class="field">
+            <label for="suConfirm">Confirm password</label>
+            <input type="password" id="suConfirm" autocomplete="new-password" required>
+            <span class="error-text">Passwords don't match.</span>
+          </div>
+          <div class="field">
+            <label class="checkbox-row"><input type="checkbox" id="suTerms" required> I agree to the Terms &amp; Privacy Policy</label>
+            <span class="error-text">You must accept the terms to continue.</span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="signupSubmitBtn">Create account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/signup.js"></script>
+</body>
+</html>

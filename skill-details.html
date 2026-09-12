@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill details — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <div class="container section-tight">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a><span>/</span><a href="browse.html">Browse</a><span>/</span><span id="crumbTitle">Skill</span>
+    </nav>
+  </div>
+
+  <div id="detailContent" class="container">
+    <div class="skeleton skeleton-tall"></div>
+  </div>
+
+  <div id="notFoundState" class="container state-block" hidden>
+    <div class="state-block__icon">🎫</div>
+    <h3>This listing isn't on the board anymore</h3>
+    <p>It may have been removed by its owner.</p>
+    <a href="browse.html" class="btn btn-primary btn-sm">Back to browse</a>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<!-- Request modal -->
+<div class="modal-overlay" id="requestModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
+    <div class="modal__head">
+      <h3 id="requestModalTitle" class="mt-0">Propose a swap</h3>
+      <button class="modal__close" data-modal-close aria-label="Close dialog">×</button>
+    </div>
+    <form id="requestForm" novalidate>
+      <div class="field">
+        <label for="reqMessage">Message to the owner</label>
+        <textarea id="reqMessage" placeholder="Introduce yourself and suggest what you'd trade in return…" required></textarea>
+        <span class="error-text">Please add a short message.</span>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Send request</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/skill-details.js"></script>
+</body>
+</html>

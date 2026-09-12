@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your profile — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <div class="container section">
+    <div id="profileLoading" class="state-block">
+      <div class="spinner"></div>
+      <p>Loading your profile…</p>
+    </div>
+
+    <div id="profileContent" hidden>
+      <div class="card mb-2">
+        <div class="profile-head">
+          <div class="profile-avatar" id="profileAvatar">--</div>
+          <div class="profile-info">
+            <h1 id="profileName">—</h1>
+            <p class="muted" id="profileLocation"></p>
+            <p class="muted" id="profileJoined"></p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="editProfileBtn">Edit profile</button>
+        </div>
+        <p class="mt-2" id="profileBio"></p>
+        <div class="flex gap-sm flex-wrap mt-1" id="offeredTags"></div>
+      </div>
+
+      <div class="card-grid card-grid-2col mb-2">
+        <div class="card">
+          <h3 class="mt-0">Skills wanted</h3>
+          <div class="flex gap-sm flex-wrap" id="wantedTags"></div>
+        </div>
+        <div class="card">
+          <h3 class="mt-0">Reviews received</h3>
+          <div id="profileReviews"></div>
+        </div>
+      </div>
+
+      <div class="flex-between mb-2">
+        <h2 class="mt-0">Your listings</h2>
+        <a href="dashboard.html#my-skills" class="btn btn-primary btn-sm">Manage listings</a>
+      </div>
+      <div id="profileSkillsGrid" class="ticket-grid"></div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<!-- Edit profile modal -->
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
+    <div class="modal__head">
+      <h3 id="editProfileTitle" class="mt-0">Edit profile</h3>
+      <button class="modal__close" data-modal-close aria-label="Close dialog">×</button>
+    </div>
+    <form id="editProfileForm" novalidate>
+      <div class="field">
+        <label for="epName">Full name</label>
+        <input type="text" id="epName" required>
+        <span class="error-text">Please enter your name.</span>
+      </div>
+      <div class="field">
+        <label for="epLocation">Location</label>
+        <input type="text" id="epLocation" placeholder="City, State">
+      </div>
+      <div class="field">
+        <label for="epBio">Bio</label>
+        <textarea id="epBio" placeholder="Tell the community about yourself…"></textarea>
+      </div>
+      <div class="field">
+        <label for="epOffered">Skills you offer (comma separated)</label>
+        <input type="text" id="epOffered" placeholder="Photography, Spanish, React">
+      </div>
+      <div class="field">
+        <label for="epWanted">Skills you want (comma separated)</label>
+        <input type="text" id="epWanted" placeholder="Guitar, Baking">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Save changes</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

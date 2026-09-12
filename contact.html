@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — SkillSwap</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="site-navbar"></div>
+
+<main id="main">
+  <section class="section-tight contact-hero">
+    <div class="container">
+      <span class="eyebrow">Get in touch</span>
+      <h1>We'd love to hear from you.</h1>
+      <p class="lede">Questions, feedback, or a skill category we're missing — send it our way.</p>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="detail-grid">
+      <form class="form-card" id="contactForm" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="cName">Name</label>
+            <input type="text" id="cName" autocomplete="name" required>
+            <span class="error-text">Please enter your name.</span>
+          </div>
+          <div class="field">
+            <label for="cEmail">Email</label>
+            <input type="email" id="cEmail" autocomplete="email" required>
+            <span class="error-text">Enter a valid email address.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cSubject">Subject</label>
+          <select id="cSubject">
+            <option>General question</option>
+            <option>Report a listing</option>
+            <option>Partnership</option>
+            <option>Something's broken</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cMessage">Message</label>
+          <textarea id="cMessage" rows="6" required></textarea>
+          <span class="error-text">Message should be at least 15 characters.</span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="contactSubmitBtn">Send message</button>
+        <p class="form-foot" id="contactSuccess" hidden>✓ Thanks — we'll get back to you within a couple of days.</p>
+      </form>
+
+      <aside class="card">
+        <h3 class="mt-0">Other ways to reach us</h3>
+        <p class="muted">hello@skillswap.example<br>Mon–Fri, 9am–5pm</p>
+        <div class="divider"></div>
+        <h4>FAQ</h4>
+        <p class="muted faq-text"><strong>Is SkillSwap free?</strong><br>Yes — every trade is skill-for-skill, no payments involved.</p>
+        <p class="muted faq-text"><strong>Can I offer more than one skill?</strong><br>Absolutely, list as many as you'd like from your dashboard.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/env.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/apiClient.js"></script>
+<script src="js/dataService.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/contact.js"></script>
+</body>
+</html>
