@@ -31,21 +31,30 @@ const SSUtil = (() => {
 
   /* ---------- modal ---------- */
   function openModal(overlayEl) {
+    if (!overlayEl) return;
+    overlayEl.hidden = false;
     overlayEl.classList.add("is-open");
-    document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
     const focusable = overlayEl.querySelector("input, select, textarea, button");
-    if (focusable) focusable.focus();
+    if (focusable) setTimeout(() => focusable.focus(), 0);
   }
   function closeModal(overlayEl) {
+    if (!overlayEl) return;
     overlayEl.classList.remove("is-open");
-    document.body.style.overflow = "";
+    overlayEl.hidden = true;
+    if (!document.querySelector(".modal-overlay.is-open")) {
+      document.body.classList.remove("modal-open");
+    }
   }
   function wireModalDismiss(overlayEl) {
+    if (!overlayEl) return;
+    overlayEl.hidden = true;
+    overlayEl.setAttribute("aria-hidden", "true");
     overlayEl.addEventListener("click", (e) => {
       if (e.target === overlayEl) closeModal(overlayEl);
     });
     overlayEl.querySelectorAll("[data-modal-close]").forEach((btn) =>
-      btn.addEventListener("click", () => closeModal(overlayEl))
+      btn.addEventListener("click", (e) => { e.preventDefault(); closeModal(overlayEl); })
     );
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && overlayEl.classList.contains("is-open")) closeModal(overlayEl);

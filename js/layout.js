@@ -82,19 +82,42 @@
     const area = document.getElementById("navAuthArea");
     if (!area) return;
     area.innerHTML = user
-      ? `<a href="profile.html" class="btn btn-ghost btn-sm">Hi, ${SSUtil.escapeHTML(user.name.split(" ")[0])}</a>
-         <button class="avatar-btn" id="navAvatarBtn" title="${SSUtil.escapeHTML(user.name)}" aria-label="Account menu">${SSUtil.initials(user.name)}</button>`
+      ? `<div class="account-menu">
+           <button class="avatar-btn" id="navAvatarBtn" title="${SSUtil.escapeHTML(user.name)}" aria-label="Open account menu" aria-expanded="false">${SSUtil.initials(user.name)}</button>
+           <div class="account-dropdown" id="accountDropdown" hidden>
+             <div class="account-dropdown__head">
+               <strong>${SSUtil.escapeHTML(user.name)}</strong>
+               <span>${SSUtil.escapeHTML(user.email || "")}</span>
+             </div>
+             <a href="profile.html">Profile</a>
+             <a href="dashboard.html">Dashboard</a>
+             <button type="button" id="logoutBtn" class="account-logout">Log out</button>
+           </div>
+         </div>`
       : `<a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
          <a href="signup.html" class="btn btn-primary btn-sm">Sign up</a>`;
 
     const avatarBtn = document.getElementById("navAvatarBtn");
-    if (avatarBtn) {
-      avatarBtn.addEventListener("click", () => {
-        if (confirm("Log out of SkillSwap?")) {
-          SkillSwapDB.Session.clear();
-          SSUtil.toast("You've been logged out.", "info");
-          setTimeout(() => (window.location.href = "index.html"), 500);
+    const dropdown = document.getElementById("accountDropdown");
+    if (avatarBtn && dropdown) {
+      avatarBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = !dropdown.hidden;
+        dropdown.hidden = open;
+        avatarBtn.setAttribute("aria-expanded", String(!open));
+      });
+      dropdown.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => { dropdown.hidden = true; }));
+      document.addEventListener("click", (e) => {
+        if (!dropdown.hidden && !dropdown.contains(e.target) && e.target !== avatarBtn) {
+          dropdown.hidden = true;
+          avatarBtn.setAttribute("aria-expanded", "false");
         }
+      }, { once: true });
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        dropdown.hidden = true;
+        SkillSwapDB.Session.clear();
+        SSUtil.toast("You’ve been logged out.", "success", 1200);
+        setTimeout(() => { window.location.href = "index.html"; }, 650);
       });
     }
   }
@@ -102,6 +125,8 @@
   function buildFooter() {
     const mount = document.getElementById("site-footer");
     if (!mount) return;
+    const pageType = document.body.dataset.pageType || "app";
+    if (pageType !== "public") { mount.innerHTML = ""; return; }
     mount.innerHTML = `
       <footer class="footer">
         <div class="container footer__grid">

@@ -238,3 +238,25 @@ table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:left;
   .hero__stats{gap:1.2rem}
   .board{transform:scale(.92);transform-origin:top left}
 }
+
+
+/* ---------- application polish / interaction fixes ---------- */
+body.modal-open{overflow:hidden}
+.modal-overlay{display:none;opacity:0;visibility:hidden;transition:opacity 160ms ease,visibility 160ms ease}
+.modal-overlay.is-open{display:grid;opacity:1;visibility:visible}
+.modal-overlay[hidden]{display:none!important}
+.modal{transform:translateY(8px) scale(.985);transition:transform 160ms ease}
+.modal-overlay.is-open .modal{transform:none}
+.dash-panel{display:none;padding:0}
+.dash-panel.is-active{display:block}
+.card-grid-2col{grid-template-columns:repeat(2,minmax(0,1fr))}
+.account-menu{position:relative}
+.account-dropdown{position:absolute;right:0;top:calc(100% + 10px);width:230px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:.45rem;z-index:150}
+.account-dropdown[hidden]{display:none}
+.account-dropdown__head{padding:.65rem .7rem .75rem;border-bottom:1px solid var(--line);margin-bottom:.3rem;display:grid;gap:.12rem}
+.account-dropdown__head strong{font-size:.88rem}.account-dropdown__head span{font-size:.72rem;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-dropdown a,.account-logout{display:block;width:100%;border:0;background:transparent;text-align:left;padding:.65rem .7rem;border-radius:9px;color:var(--ink);font-size:.85rem;font-weight:650}
+.account-dropdown a:hover{background:var(--primary-soft);color:var(--primary-dark)}
+.account-logout{color:var(--danger)}.account-logout:hover{background:#fff0f0}
+.footer{margin-top:0}
+@media(max-width:700px){.card-grid-2col{grid-template-columns:1fr}.account-dropdown{right:-6px}}
