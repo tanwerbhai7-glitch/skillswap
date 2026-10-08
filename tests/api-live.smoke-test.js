@@ -28,7 +28,7 @@ function load(file, exportName) {
 
 const FAKE_CATEGORIES = [{ _id: "cat_1", name: "Design", icon: "🎨", skillCount: 2 }];
 const FAKE_SKILLS = [
-  { _id: "skl_100", title: "Fake API Skill", description: "x".repeat(25), category: "Design", level: "Beginner", ownerId: "usr_100", ownerName: "API User", rating: 4.5, ratingCount: 2, tags: [], createdAt: new Date().toISOString() },
+  { _id: "skl_100", title: "API Fixture Skill", description: "x".repeat(25), category: "Design", level: "Beginner", ownerId: "usr_100", ownerName: "API User", rating: 4.5, ratingCount: 2, tags: [], createdAt: new Date().toISOString() },
 ];
 
 const server = http.createServer((req, res) => {
@@ -62,12 +62,12 @@ async function main() {
   check("Categories.list() returns live API data (not fallback)", categories.length === 1 && categories[0].name === "Design", JSON.stringify(categories));
 
   const skills = await SSData.Skills.list();
-  check("Skills.list() returns live API data (not fallback)", skills.length === 1 && skills[0].title === "Fake API Skill", JSON.stringify(skills.map((s) => s.title)));
+  check("Skills.list() returns live API data (not fallback)", skills.length === 1 && skills[0].title === "API Fixture Skill", JSON.stringify(skills.map((s) => s.title)));
 
   check("Skill from API is normalized with .id (not just ._id)", skills[0].id === "skl_100", skills[0].id);
 
   const cachedLocally = SkillSwapDB.Skills.get("skl_100");
-  check("API result was write-through cached into localStorage", cachedLocally && cachedLocally.title === "Fake API Skill", JSON.stringify(cachedLocally));
+  check("API result was write-through cached into localStorage", cachedLocally && cachedLocally.title === "API Fixture Skill", JSON.stringify(cachedLocally));
 
   check("SSData reports API as NOT known-down (happy path)", SSData.isApiKnownDown() === false);
 

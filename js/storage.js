@@ -154,10 +154,34 @@ const SkillSwapDB = (() => {
     },
   };
 
-  /* ---------- seed mock data (first run only) ---------- */
-  function seed() {
-    if (read(KEYS.seeded, false)) return;
+  /* ---------- initialize only the public categories ----------
+     No users, skills, requests, reviews or sample credentials are
+     created here. Real records come from the API or from actions
+     performed by the current user. */
+  function clearLegacyDemoData() {
+    // One-time migration for older versions that shipped sample records.
+    const legacyIds = ["usr_demo1","usr_demo2","usr_demo3","usr_demo4","usr_demo5"];
+    const users = read(KEYS.users, []);
+    const skills = read(KEYS.skills, []);
+    const requests = read(KEYS.requests, []);
+    const reviews = read(KEYS.reviews, []);
 
+    const hasLegacy = users.some(u => legacyIds.includes(u.id)) ||
+      skills.some(s => legacyIds.includes(s.ownerId)) ||
+      requests.some(r => legacyIds.includes(r.ownerId) || legacyIds.includes(r.requesterId)) ||
+      reviews.some(r => legacyIds.includes(r.ownerId));
+
+    if (hasLegacy) {
+      write(KEYS.users, users.filter(u => !legacyIds.includes(u.id)));
+      write(KEYS.skills, skills.filter(s => !legacyIds.includes(s.ownerId)));
+      write(KEYS.requests, requests.filter(r => !legacyIds.includes(r.ownerId) && !legacyIds.includes(r.requesterId)));
+      write(KEYS.reviews, reviews.filter(r => !legacyIds.includes(r.ownerId)));
+      const session = read(KEYS.session, null);
+      if (session && legacyIds.includes(session.userId)) localStorage.removeItem(KEYS.session);
+    }
+  }
+
+  function seed() {
     const categories = [
       { name: "Design", icon: "🎨" },
       { name: "Development", icon: "💻" },
@@ -168,52 +192,11 @@ const SkillSwapDB = (() => {
       { name: "Photography", icon: "📷" },
       { name: "Business", icon: "📈" },
     ];
-    write(KEYS.categories, categories);
-
-    const users = [
-      { id: "usr_demo1", name: "Ava Torres", email: "ava@example.com", password: "Password1", bio: "UX designer who trades Figma know-how for guitar lessons.", location: "Austin, TX", joined: "2024-02-11T00:00:00Z", skillsOffered: ["UI/UX Design", "Figma Prototyping"], skillsWanted: ["Acoustic Guitar", "Spanish"] },
-      { id: "usr_demo2", name: "Marcus Lee", email: "marcus@example.com", password: "Password1", bio: "Full-stack dev, weekend chef. Happy to pair-program for a home-cooked meal plan.", location: "Seattle, WA", joined: "2023-11-02T00:00:00Z", skillsOffered: ["JavaScript", "React"], skillsWanted: ["Knife Skills", "Baking"] },
-      { id: "usr_demo3", name: "Priya Nair", email: "priya@example.com", password: "Password1", bio: "Classically trained pianist teaching music theory in exchange for photography tips.", location: "Chicago, IL", joined: "2024-05-19T00:00:00Z", skillsOffered: ["Piano", "Music Theory"], skillsWanted: ["Photography", "Photo Editing"] },
-      { id: "usr_demo4", name: "Diego Ramirez", email: "diego@example.com", password: "Password1", bio: "Spanish tutor and home cook. Loves trading language lessons for fitness coaching.", location: "Miami, FL", joined: "2024-01-08T00:00:00Z", skillsOffered: ["Spanish", "Mexican Cooking"], skillsWanted: ["Personal Training", "Yoga"] },
-      { id: "usr_demo5", name: "Hana Kobayashi", email: "hana@example.com", password: "Password1", bio: "Product photographer swapping shoots for business strategy sessions.", location: "Portland, OR", joined: "2023-09-27T00:00:00Z", skillsOffered: ["Photography", "Lightroom Editing"], skillsWanted: ["Business Planning", "SEO"] },
-    ];
-    write(KEYS.users, users);
-
-    const skills = [
-      { id: "skl_1", ownerId: "usr_demo1", ownerName: "Ava Torres", title: "UI/UX Design Fundamentals", category: "Design", level: "Intermediate", description: "Learn user research, wireframing and prototyping in Figma. Six sessions covering a full product design flow from brief to hi-fi mockups.", tags: ["figma", "wireframes", "ux research"], wantInReturn: "Acoustic guitar lessons or conversational Spanish", rating: 4.8, ratingCount: 12, image: "🎨" },
-      { id: "skl_2", ownerId: "usr_demo2", ownerName: "Marcus Lee", title: "Modern JavaScript & React", category: "Development", level: "Advanced", description: "Hands-on React + hooks workshop: build a small app together, cover state management and clean component design.", tags: ["react", "javascript", "frontend"], wantInReturn: "Knife skills or a home baking lesson", rating: 4.9, ratingCount: 21, image: "💻" },
-      { id: "skl_3", ownerId: "usr_demo3", ownerName: "Priya Nair", title: "Piano for Beginners", category: "Music", level: "Beginner", description: "Get comfortable at the keyboard: reading notation, basic chords, and your first two songs in four weeks.", tags: ["piano", "music theory"], wantInReturn: "Photography basics or Lightroom editing help", rating: 5.0, ratingCount: 8, image: "🎹" },
-      { id: "skl_4", ownerId: "usr_demo4", ownerName: "Diego Ramirez", title: "Conversational Spanish", category: "Language", level: "Beginner", description: "Practical spoken Spanish for travel and everyday conversation, with real dialogue practice each session.", tags: ["spanish", "conversation"], wantInReturn: "Personal training session or yoga fundamentals", rating: 4.7, ratingCount: 15, image: "🗣️" },
-      { id: "skl_5", ownerId: "usr_demo5", ownerName: "Hana Kobayashi", title: "Product Photography Basics", category: "Photography", level: "Intermediate", description: "Lighting, composition and editing for clean product shots — perfect for small shop owners and makers.", tags: ["photography", "lighting", "lightroom"], wantInReturn: "Business plan review or SEO audit", rating: 4.6, ratingCount: 9, image: "📷" },
-      { id: "skl_6", ownerId: "usr_demo2", ownerName: "Marcus Lee", title: "Intro to Node.js APIs", category: "Development", level: "Intermediate", description: "Build a small REST API with Node and Express, covering routing, middleware and basic auth patterns.", tags: ["node", "api", "backend"], wantInReturn: "Cooking lesson: weeknight dinners", rating: 4.5, ratingCount: 6, image: "🖥️" },
-      { id: "skl_7", ownerId: "usr_demo1", ownerName: "Ava Torres", title: "Figma Prototyping Deep Dive", category: "Design", level: "Advanced", description: "Advanced auto-layout, variants and interactive prototypes for design systems.", tags: ["figma", "design systems"], wantInReturn: "Music theory basics", rating: 4.9, ratingCount: 11, image: "🧩" },
-      { id: "skl_8", ownerId: "usr_demo3", ownerName: "Priya Nair", title: "Music Theory Crash Course", category: "Music", level: "Beginner", description: "Scales, intervals and chord progressions explained simply, with keyboard exercises.", tags: ["theory", "keyboard"], wantInReturn: "Portrait photography session", rating: 4.8, ratingCount: 7, image: "🎼" },
-      { id: "skl_9", ownerId: "usr_demo4", ownerName: "Diego Ramirez", title: "Home-Style Mexican Cooking", category: "Cooking", level: "Beginner", description: "Learn to make tacos al pastor, salsas from scratch, and a proper mole from a home cook's kitchen.", tags: ["cooking", "mexican food"], wantInReturn: "Strength training program", rating: 5.0, ratingCount: 14, image: "🌮" },
-      { id: "skl_10", ownerId: "usr_demo5", ownerName: "Hana Kobayashi", title: "Lightroom Editing Workflow", category: "Photography", level: "Intermediate", description: "A repeatable editing workflow to get consistent, polished photos fast.", tags: ["lightroom", "editing"], wantInReturn: "Basic SEO or growth strategy", rating: 4.4, ratingCount: 5, image: "🖼️" },
-      { id: "skl_11", ownerId: "usr_demo2", ownerName: "Marcus Lee", title: "Personal Fitness Coaching", category: "Fitness", level: "Beginner", description: "Wait — this one's a trade offer: Marcus wants this skill, not offering it. (Demo of a 'wanted' style listing.)", tags: ["fitness"], wantInReturn: "Trade: JavaScript mentoring", rating: 4.3, ratingCount: 3, image: "🏋️" },
-      { id: "skl_12", ownerId: "usr_demo1", ownerName: "Ava Torres", title: "Brand Identity & Logo Design", category: "Design", level: "Advanced", description: "Develop a cohesive brand identity: logo, color system and typography guidelines for a small business.", tags: ["branding", "logo"], wantInReturn: "Guitar lessons", rating: 4.7, ratingCount: 10, image: "🖌️" },
-    ];
-    write(KEYS.skills, skills);
-
-    const requests = [
-      { id: "req_1", skillId: "skl_2", skillTitle: "Modern JavaScript & React", ownerId: "usr_demo2", ownerName: "Marcus Lee", requesterId: "usr_demo1", requesterName: "Ava Torres", message: "Would love to trade Figma sessions for a few React basics — flexible on schedule!", status: "pending", createdAt: "2025-06-01T10:00:00Z" },
-      { id: "req_2", skillId: "skl_3", skillTitle: "Piano for Beginners", ownerId: "usr_demo3", ownerName: "Priya Nair", requesterId: "usr_demo5", requesterName: "Hana Kobayashi", message: "I can trade a full product photo session for piano lessons.", status: "accepted", createdAt: "2025-05-20T10:00:00Z" },
-      { id: "req_3", skillId: "skl_9", skillTitle: "Home-Style Mexican Cooking", ownerId: "usr_demo4", ownerName: "Diego Ramirez", requesterId: "usr_demo2", requesterName: "Marcus Lee", message: "Big fan of home cooking — happy to build you a small API in return.", status: "completed", createdAt: "2025-04-14T10:00:00Z" },
-      { id: "req_4", skillId: "skl_1", skillTitle: "UI/UX Design Fundamentals", ownerId: "usr_demo1", ownerName: "Ava Torres", requesterId: "usr_demo4", requesterName: "Diego Ramirez", message: "Could I trade Spanish conversation practice for UX lessons?", status: "declined", createdAt: "2025-05-02T10:00:00Z" },
-    ];
-    write(KEYS.requests, requests);
-
-    const reviews = [
-      { id: "rev_1", skillId: "skl_2", ownerId: "usr_demo2", authorName: "Ava Torres", rating: 5, comment: "Marcus is a fantastic teacher — clear explanations and real patience with my beginner questions.", createdAt: "2025-03-01T10:00:00Z" },
-      { id: "rev_2", skillId: "skl_3", ownerId: "usr_demo3", authorName: "Hana Kobayashi", rating: 5, comment: "Priya made piano genuinely fun. I can play two songs already!", createdAt: "2025-03-10T10:00:00Z" },
-      { id: "rev_3", skillId: "skl_1", ownerId: "usr_demo1", authorName: "Diego Ramirez", rating: 4, comment: "Really solid intro to Figma, would have liked a bit more time on prototyping.", createdAt: "2025-02-18T10:00:00Z" },
-      { id: "rev_4", skillId: "skl_9", ownerId: "usr_demo4", authorName: "Marcus Lee", rating: 5, comment: "Best mole I've ever had, and Diego explained every step clearly.", createdAt: "2025-04-20T10:00:00Z" },
-    ];
-    write(KEYS.reviews, reviews);
-
+    if (!read(KEYS.categories, null)?.length) write(KEYS.categories, categories);
     write(KEYS.seeded, true);
   }
 
+  clearLegacyDemoData();
   seed();
 
   return { Users, Skills, Requests, Reviews, Categories, Session, KEYS, uid, nowISO };

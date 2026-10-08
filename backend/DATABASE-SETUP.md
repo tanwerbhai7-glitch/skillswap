@@ -29,18 +29,7 @@ The startup migration also upgrades an older `users` table that has a `password`
 column to the backend's expected `password_hash` column and adds missing
 `is_active` / `updated_at` columns.
 
-## Seed demo data
+## Initialize categories
 
-After MySQL is running:
+Use `npm run seed` to initialize the public skill categories. The command does not create sample users, listings, requests, reviews, or passwords.
 
-```bash
-npm install
-npm run seed
-npm start
-```
-
-The seed command clears the SkillSwap tables and inserts demo data.
-All seeded demo users use password `Password1`.
-
-
-Compatibility note: startup normalizes legacy users.id/categories.id to signed INT so foreign keys match the current schema.

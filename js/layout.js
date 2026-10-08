@@ -124,7 +124,7 @@
             <ul>
               <li><a href="about.html">About us</a></li>
               <li><a href="contact.html">Contact</a></li>
-              <li><a href="404.html">404 preview</a></li>
+              
             </ul>
           </div>
           <div>
@@ -137,7 +137,7 @@
           </div>
         </div>
         <div class="container footer__bottom">
-          <span>© ${new Date().getFullYear()} SkillSwap. A frontend demo — nothing here is real yet.</span>
+          <span>© ${new Date().getFullYear()} SkillSwap. A community platform for sharing knowledge, finding mentors and exchanging practical skills.</span>
           <span>Built with HTML, CSS &amp; vanilla JS</span>
         </div>
       </footer>`;

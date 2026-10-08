@@ -47,7 +47,7 @@ async function main() {
   }
 
   // 1. API is reachable (health-adjacent) but DB is down -> every data
-  //    call should transparently fall back to the seeded local mock data.
+  //    call should transparently fall back to the local fixture data.
   const skills = await SSData.Skills.list();
   check("Skills.list() falls back with seeded data", Array.isArray(skills) && skills.length === 12, `got ${skills.length} skills`);
 
@@ -57,7 +57,7 @@ async function main() {
   const users = await SSData.Users.list();
   check("Users.list() falls back with seeded data", Array.isArray(users) && users.length === 5, `got ${users.length} users`);
 
-  // 2. Login against fallback (demo user seeded in localStorage mock data)
+  // 2. Login against fallback (test user available in localStorage fixture data)
   const loggedIn = await SSData.Users.login("ava@example.com", "Password1");
   check("Users.login() works against fallback", loggedIn && loggedIn.email === "ava@example.com", JSON.stringify(loggedIn && loggedIn.email));
 

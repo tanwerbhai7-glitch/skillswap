@@ -18,7 +18,7 @@
 
    Nothing here deletes or bypasses SkillSwapDB — it's Plan B, not
    replaced. window.SkillSwapDB is still fully usable directly if a
-   page wants pure offline/demo behaviour (see env.js FORCE_LOCAL_ONLY).
+   page wants pure offline behaviour (see env.js FORCE_LOCAL_ONLY).
    ============================================================== */
 
 const SSData = (() => {

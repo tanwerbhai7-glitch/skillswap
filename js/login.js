@@ -15,13 +15,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   [emailInput, passwordInput].forEach((el) => el.addEventListener("input", () => SSUtil.clearFieldError(el)));
 
-  document.getElementById("fillDemoBtn").addEventListener("click", (e) => {
-    e.preventDefault();
-    emailInput.value = "ava@example.com";
-    passwordInput.value = "Password1";
-    SSUtil.toast("Demo credentials filled in.", "info", 2200);
-  });
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const emailOk = SSUtil.validateField(emailInput, [SSUtil.rules.required, SSUtil.rules.email]);

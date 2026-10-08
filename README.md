@@ -1,100 +1,81 @@
 # SkillSwap
 
-A skill-exchange marketplace. Phase 1–2 shipped a fully working frontend
-(HTML/CSS/vanilla JS) backed by `localStorage`. Phase 3–4 add a real
-Node.js/Express/MySQL backend behind that same frontend, **without**
-redesigning any UI or deleting the localStorage logic.
+SkillSwap is a skill-exchange marketplace where people can offer what they know,
+discover skills they want to learn, and send direct swap requests.
+
+The project uses a responsive HTML/CSS/vanilla-JS frontend with a Node.js,
+Express and MySQL backend. There are **no preloaded sample accounts,
+listings, requests or reviews**.
 
 ## Project layout
 
-```
+```text
 skillswap/
-├── *.html                 Pages (unchanged from Phase 1–2)
-├── css/style.css           Design system (unchanged)
-├── js/
-│   ├── env.js               ← NEW  environment/API config
-│   ├── apiClient.js         ← NEW  thin fetch() wrapper
-│   ├── dataService.js       ← NEW  SSData: API-first, localStorage-fallback facade
-│   ├── storage.js           Phase 2 localStorage layer — still fully intact, now doubles as an offline cache
-│   ├── layout.js, *.js      Page controllers — now call `SSData.*` (async) instead of `SkillSwapDB.*` (sync)
-│   └── cards.js, utils.js   Unchanged
-├── backend/                ← NEW  Node.js/Express/MySQL API
-│   ├── server.js, app.js
-│   └── src/{config,routes,controllers,models,middleware,validators,utils}
-└── tests/                  ← NEW  Node-based smoke tests for the data layer
+├── *.html                 Responsive application pages
+├── css/style.css          Shared responsive design system
+├── js/                    Frontend controllers and API/data layer
+├── backend/               Node.js/Express/MySQL API
+└── tests/                 Data-layer smoke tests
 ```
 
-## Running it
-
-### 1. Backend
+## Run the backend
 
 ```bash
 cd backend
 npm install
-copy .env.example .env    # Windows PowerShell: Copy-Item .env.example .env
-# Put your MySQL password in DB_PASSWORD if your root account has one.
-npm run seed                # populates MySQL with demo data (same as the old mock data)
-npm start                   # or `npm run dev` for auto-restart
+copy .env.example .env
+# Add your MySQL settings to .env
+npm run seed
+npm start
 ```
 
-The API listens on `http://localhost:5000` by default (`GET /api/health` to check).
+The API listens on `http://localhost:5000` by default.
 
-### 2. Frontend
+`npm run seed` initializes the public skill categories only. It does not create
+sample users or fake marketplace activity.
 
-Serve the project root with any static file server, e.g.:
+## Run the frontend
+
+From the project root:
 
 ```bash
 npx http-server . -p 8080
 ```
 
-Open `http://localhost:8080/index.html`. `js/env.js` auto-detects the backend
-at `http://<same-host>:5000/api` — no configuration needed for local dev.
-To point at a different backend (staging/prod), set it before `env.js` loads:
+Then open `http://localhost:8080/index.html`.
 
-```html
-<script>window.__SKILLSWAP_ENV__ = { API_BASE_URL: "https://api.example.com/api" };</script>
-<script src="js/env.js"></script>
+The frontend automatically targets the backend at:
+
+```text
+http://<same-host>:5000/api
 ```
 
-### 3. Demo login
+For a staging or production backend, define `window.__SKILLSWAP_ENV__` before
+loading `js/env.js`.
 
-Every seeded user shares the password `Password1` (e.g. `ava@example.com`).
+## Data flow
 
-## How the data layer switches sources
+`js/dataService.js` is the data facade used by the page controllers:
 
-`js/dataService.js` (`SSData`) is the **only** thing page controllers talk to.
-For every call it:
+1. It tries the real REST API.
+2. Successful API responses are cached locally for smoother navigation.
+3. If the API is temporarily unavailable, locally created/cached records can
+   still be used where supported.
 
-1. Tries the real API via `js/apiClient.js`.
-2. On success, mirrors the result into `localStorage` (write-through cache).
-3. On any network/server failure, transparently falls back to the original
-   `SkillSwapDB` localStorage logic and shows a one-time "backend unreachable"
-   toast — the app keeps working either way.
+The UI is intentionally empty on a fresh installation. Users create their own
+accounts and listings instead of seeing prefilled sample content.
 
-This means the UI never has to know or care whether data came from MySQL
-or `localStorage`. Set `window.__SKILLSWAP_ENV__ = { FORCE_LOCAL_ONLY: true }`
-before `env.js` loads to run the pure Phase 2 experience on demand.
+## Main user flow
 
-## Verifying it works
+1. Create an account.
+2. Complete your profile and add skills you can offer.
+3. Browse skills from other members.
+4. Open a listing and send a swap request describing what you can offer.
+5. Manage incoming and outgoing requests from the dashboard.
+6. Complete a swap and leave a review.
 
-```bash
-# with the backend NOT fully reachable (or DB down) — exercises the fallback path
-node tests/fallback.smoke-test.js
+## Security note
 
-# spins up a fake in-process API to exercise the happy path
-node tests/api-live.smoke-test.js
-```
-
-Both are plain Node scripts (no browser needed) that load the actual
-frontend JS files and drive `SSData` directly.
-
-## What Phase 5+ will change (by design, not by rewrite)
-
-- `backend/src/middleware/auth.js` already exists as a no-op
-  (`attachUserIfPresent`/`requireAuth`) so JWT can be wired in without
-  touching route files.
-- `backend/src/config/env.js` already reads `JWT_SECRET`/`JWT_EXPIRES_IN`.
-- Passwords are already hashed with bcrypt and never returned from the API.
-- `SSData.Session` already isolates "who's logged in" from the rest of the
-  data layer, so swapping a local userId pointer for a real token is a
-  contained change.
+For a production deployment, keep authentication and authorization on the
+backend, use HTTPS, configure a strong JWT/session strategy, validate all
+incoming data server-side, and never store real passwords in browser storage.
